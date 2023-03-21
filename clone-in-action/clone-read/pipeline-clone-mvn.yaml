@@ -1,10 +1,12 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: clone-read
+  name: clone-maven
 spec:
   params:
   - name: repo-url
+    type: string
+  - name: git-init
     type: string
   workspaces:
   - name: shared-data
@@ -24,10 +26,12 @@ spec:
     params:
     - name: url
       value: $(params.repo-url)
-  - name: show-readme
+    - name: gitInitImage
+      value: $(params.git-init)
+  - name: maven-run
     runAfter: ["fetch-source"]
     taskRef:
-      name: show-readme
+      name: maven-run
     workspaces:
     - name: source
       workspace: shared-data

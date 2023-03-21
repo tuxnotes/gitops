@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: maven-run
+spec:
+  workspaces:
+    - name: source
+  params:
+    - name: contextDir
+      description: the context dir within source
+      default: quarkus
+  steps:
+    - name: build-sources
+      image: hub.smartsteps.com/public/maven:3.8.1-jdk-8
+      command:
+        - mvn
+      args:
+        - -DskipTests
+        - clean
+        - install
+      env:
+        - name: user.home
+          value: /home/tekton
+      workingDir: $(workspaces.source.path)/$(params.contextDir)

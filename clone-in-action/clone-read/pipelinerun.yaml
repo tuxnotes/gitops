@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
   generateName: clone-read-run-
-sepc:
+spec:
   pipelineRef:
     name: clone-read
   podTemplate:
@@ -23,3 +23,5 @@ sepc:
   params:
   - name: repo-url
     value: git@git.smartsteps.com:delivery/developer/ops/k8s_ops/demo.git
+  - name: git-init
+    value: hub.smartsteps.com/gitops/tektoncd/pipeline/cmd/git-init:v0.43.2

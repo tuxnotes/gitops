@@ -6,6 +6,8 @@ spec:
   params:
   - name: repo-url
     type: string
+  - name: git-init
+    type: string
   workspaces:
   - name: shared-data
     description: |
@@ -24,6 +26,8 @@ spec:
     params:
     - name: url
       value: $(params.repo-url)
+    - name: gitInitImage
+      value: $(params.git-init)
   - name: show-readme
     runAfter: ["fetch-source"]
     taskRef:

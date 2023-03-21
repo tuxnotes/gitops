@@ -1,0 +1,42 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: clone-build-push-run-
+spec:
+  pipelineRef:
+    name: clone-build-push
+  podTemplate:
+    securityContext:
+      fsGroup: 65532
+  workspaces:
+  - name: shared-data
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+  - name: docker-credentials
+    secret:
+      secretName: docker-credentials
+  - name: git-credentials
+    secret:
+      secretName: git-credentials
+  - name: ca-crt
+    configMap:
+      name: ca-crt
+      defaultMode: 420
+      items:
+      - key: ca.crt
+        path: ca.crt
+  params:
+  - name: repo-url
+    value: git@git.smartsteps.com:delivery/developer/ops/k8s_ops/simpleweb.git
+  - name: image-reference
+    value: hub.smartsteps.com/gitops/simpleweb:0.0.1
+  - name: git-init
+    value: hub.smartsteps.com/gitops/tektoncd/pipeline/cmd/git-init:v0.43.2
+  - name: build-image
+    value: hub.smartsteps.com/gitops/executor:v1.5.1
+
